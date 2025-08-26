@@ -97,6 +97,7 @@ pub fn calculate_sum(a: i32, b: i32) -> i32 {
     a + b
 }
 
+// use : cargo expand --bin rust_examples
 fn main() {
     say_hello!();
 
@@ -125,13 +126,13 @@ fn main() {
     println!("{:?}", reversed);
 
     let p = Point { x: 10, y: 20 };
-    p.my_fmt(); // Expected output: Point: { x: 10, y: 20, }
+    p.my_fmt();
 
     let c = Coords(1.0, 2.5);
-    c.my_fmt(); // Expected output: Coords: { 0: 1.0, 1: 2.5, }
+    c.my_fmt();
 
     let e = Empty;
-    e.my_fmt(); // Expected output: Empty: { (unit struct) }
+    e.my_fmt();
 
     calculate_sum(3, 9);
 }
