@@ -470,6 +470,20 @@ Function `add` returned
 Sum: 12
 ```
 
+**Extracted Components:**
+*   **`fn_name`**: The function's identifier (name)
+*   **`fn_block`**: The function's body (the code inside `{ ... }`)
+*   **`fn_sig`**: The function's complete signature (name, parameters, return type, etc.)
+*   **`fn_vis`**: The function's visibility modifier (`pub`, `pub(crate)`, private, etc.)
+*   **`fn_attrs`**: Any attributes applied to the function (like `#[inline]`, `#[allow]`, etc.)
+
+5.  **`quote! { ... }`**: We reconstruct the function with enhanced functionality:
+    *   **`#(#fn_attrs)*`**: Preserves all original function attributes
+    *   **`#fn_vis #fn_sig`**: Maintains the original visibility and signature
+    *   **`println!` statements**: Adds logging before and after execution
+    *   **`#fn_block`**: Embeds the original function body
+    *   **`result`**: Ensures the original return value is preserved and returned
+
 **How it works:**
 
 1.  **`#[proc_macro_attribute]`**: Marks the `log_calls` function as an attribute macro.

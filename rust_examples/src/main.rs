@@ -1,3 +1,4 @@
+use rust_examples::*;
 // A tool for debugging : `cargo expand`
 
 macro_rules! say_hello {
@@ -54,6 +55,48 @@ macro_rules! find_min {
     };
 }
 
+macro_rules! vector {
+    // Case 1: vector![1; 3] => [1,1,1]
+    ($elem:expr; $count:expr) => ({
+        let mut temp_vec = Vec::new();
+        temp_vec.reserve($count);
+        for _ in 0..$count {
+            temp_vec.push($elem);
+        }
+        temp_vec
+    });
+
+    // Case 2: vector![1,2,4,5] or vector![]
+    ($($elem:expr),* $(,)?) => ({
+        let mut temp_vec = Vec::new();
+        $(
+            temp_vec.push($elem);
+        )*
+        temp_vec
+    });
+}
+
+pub trait MyDebug {
+    fn my_fmt(&self);
+}
+
+#[derive(MyDebug)]
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+#[derive(MyDebug)]
+struct Coords(f64, f64);
+
+#[derive(MyDebug)]
+struct Empty;
+
+#[log_call]
+pub fn calculate_sum(a: i32, b: i32) -> i32 {
+    a + b
+}
+
 fn main() {
     say_hello!();
 
@@ -74,4 +117,21 @@ fn main() {
     println!("{}", find_min!(1));
     println!("{}", find_min!(1 + 2, 2));
     println!("{}", find_min!(5, 2 * 3, 4));
+
+    let vv = vector![1, 3, 5, 5, 6, 3,];
+    println!("{:?}", vv);
+
+    let reversed = reverse_exprs!(1, 3, 5);
+    println!("{:?}", reversed);
+
+    let p = Point { x: 10, y: 20 };
+    p.my_fmt(); // Expected output: Point: { x: 10, y: 20, }
+
+    let c = Coords(1.0, 2.5);
+    c.my_fmt(); // Expected output: Coords: { 0: 1.0, 1: 2.5, }
+
+    let e = Empty;
+    e.my_fmt(); // Expected output: Empty: { (unit struct) }
+
+    calculate_sum(3, 9);
 }
