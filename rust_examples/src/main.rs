@@ -44,6 +44,42 @@ macro_rules! test {
     };
 }
 
+//? Repetitions :
+macro_rules! vec_strs {
+    (
+       // Start a repetition:
+        $(
+            // Each repeat must contain an expression...
+            $element:expr
+        )
+        // ...separated by commas...
+        ,
+        // ...zero or more times.
+        *
+    ) => {
+        // Enclose the expansion in a block so that we can use
+        // multiple statements.
+        {
+            let mut v = Vec::new();
+
+            // Start a repetition:
+            $(
+                // Each repeat will contain the following statement, with
+                // $element replaced with the corresponding expression.
+                v.push(format!("{}", $element));
+            )*
+
+            v
+        }
+    };
+}
+
+macro_rules! repeat_two {
+    ($($i:ident)*, $($i2:ident)*) => {
+        $( let $i: (); let $i2: (); )*
+    }
+}
+
 macro_rules! find_min {
     // base case
     ($x:expr) => {
@@ -118,6 +154,13 @@ fn main() {
     println!("{}", find_min!(1));
     println!("{}", find_min!(1 + 2, 2));
     println!("{}", find_min!(5, 2 * 3, 4));
+
+    let s = vec_strs![1, "a", true, 3.14159f32];
+    assert_eq!(s, &["1", "a", "true", "3.14159"]);
+
+    repeat_two!(a b c d e f, u v w x y z ); // this allowed because both repetition are equally
+    // repeat_two!( a b c d e f, x y z ); // Not allowed
+    // error: meta-variable `i` repeats 6 times, but `i2` repeats 3 times
 
     let vv = vector![1, 3, 5, 5, 6, 3,];
     println!("{:?}", vv);
